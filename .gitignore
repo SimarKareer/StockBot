@@ -1,0 +1,5 @@
+.vscode/
+IEX_historical-prices/script/output/
+IEX_historical-prices/script/log
+IEX_historical-prices/script/config.json
+config.json/
