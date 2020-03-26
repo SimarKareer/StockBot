@@ -10,6 +10,8 @@ import heapq
 import psutil
 import os
 import json
+from Market import Market
+from TradingSession import TradingSession
 
 #TODO: multiple days tests
 #TODO: Live Data
@@ -51,3 +53,5 @@ def runDecisionLoop(start, end, timestep, decisionLoop):
 start = datetime.strptime("2020-02-24 09:30", "%Y-%m-%d %H:%M")
 end = start + timedelta(hours = 2)
 runDecisionLoop(start, end, timedelta(minutes = 1), decisionLoop)
+
+# %%
