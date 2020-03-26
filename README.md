@@ -2,7 +2,9 @@
 Ez stonks aquire currency
 
 ## Setup
-First make an empty config.json in the base folder and in the IEX_historical-prices folder.  Make that file look like this...
+First make an account on https://iexcloud.io
+
+Then make an empty config.json in the base folder AND in the IEX_historical-prices/script folder. Take your secret API token and put it into the file to look like this...
 ```
 {
     "TOKEN": "sk_84a41298ed784f75bf6d15853fb489f0"
