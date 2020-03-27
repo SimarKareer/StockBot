@@ -13,34 +13,43 @@ import json
 from Market import Market
 from TradingSession import TradingSession
 
-#TODO: multiple days tests
+#TODO: What to do with missing data?
+#TODO: Fix CSVs live
+#TODO: failsafe to make sure we can't get a price after our current date
 #TODO: Live Data
 
 # %%
 def decisionLoop(tradingSession):
     """
-        make a function which I can call, each time with all relevant time series up to the correct date.
-        Pass in the current state holding object (something keeping track of all the portfolios and individual stocks I have)
+        This decision loop is an example of a trading strategy.  The strategy gets all its decision making information from the tradingSession object
         
+        Args:
+            tradingSession (TradingSession): Your current trading session
+        
+        Returns:
+            None
     """
-    print("Currently have $", tradingSession.money, "in cash")
+    # print("Currently have $", tradingSession.money, "in cash")
+
     tradingSession.buy("LYFT", 1)
     tradingSession.buy("MSFT", 1)
     tradingSession.buy("DBX", 1)
     tradingSession.buy("FB", 1)
-    # tradingSession.buy("YELP", 1)
-    print("Net value at ", tradingSession.time, " is ", tradingSession.value())
-    print("--------------------")
+    # print("Net value at ", tradingSession.time, " is ", tradingSession.value())
+    # print("--------------------")
 
 # %%
 def runDecisionLoop(start, end, timestep, decisionLoop):
     """
         given a time period, start to end, run the algorithm implemented in decision loop for each provided timestep
         Args:
-            start - datetime
-            end - datetime
-            timestep - timedelta
-            decisionLoop - function to decide how to make decision
+            start (datetime): time to start testing strategy
+            end (datetime): time to end testing strategy
+            timestep (timedelta): time between each iteration
+            decisionLoop (function(tradingSession)): function defining strategy
+        
+        Returns:
+            None
     """
     market = Market()
     ts = TradingSession(None, 1000000, market, start)
@@ -50,8 +59,10 @@ def runDecisionLoop(start, end, timestep, decisionLoop):
         ts.updateTime(timestep)
     ts.end()
 
-start = datetime.strptime("2020-02-24 09:30", "%Y-%m-%d %H:%M")
-end = start + timedelta(hours = 2)
-runDecisionLoop(start, end, timedelta(minutes = 1), decisionLoop)
+start = datetime.strptime("2020-02-24 9:30", "%Y-%m-%d %H:%M")
+end = datetime.strptime("2020-02-26 20:30", "%Y-%m-%d %H:%M")
+# end = start + timedelta(days = 3)
 
+runDecisionLoop(start, end, timedelta(minutes = 1), decisionLoop)
 # %%
+
