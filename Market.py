@@ -39,7 +39,7 @@ class Market:
 
         self.pdTimerTotal = timedelta(hours=0)
     
-    def getPrice(self, ticker, time):
+    def getCSVPrice(self, ticker, time):
         """
             Gets the price of a given ticker at a given time
 
@@ -68,6 +68,19 @@ class Market:
             return filteredRow['average']
         else:
             return None
+
+    def getAPIPrice(self, ticker, time):
+        """
+            Gets price of ticker using API call
+
+            Args:
+                ticker (String): What the variable name says my guy
+                time (String): ya know, the time
+
+            Returns:
+                (np.float) associated price
+        """
+        pass
 
     def __ensureLoadedWrapper(self, ticker, time):
         start = datetime.now()

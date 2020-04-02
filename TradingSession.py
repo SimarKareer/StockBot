@@ -34,13 +34,13 @@ class TradingSession:
         print("Time loading CSVs: ", self.market.pdTimerTotal)
         print("Total Time: ", datetime.now() - self.realTimeStart)
 
-    def buy(self, ticker, quantity):
+    def trade(self, ticker, quantity):
         """
-            Function to get those good stonks.  If the price at this time is unknown we return without editing the state.
+            Function to buy/sell those good stonks.  If the price at this time is unknown we return without editing the state.
 
             Args:
-                ticker (string): the stonk you want
-                quantity (int): number of stonks
+                ticker (string): the stonk you want to trade
+                quantity (int): number of stonks (+buy, -sell)
 
             Returns:
                 None
@@ -48,33 +48,42 @@ class TradingSession:
         # adds smaller information into log string
         #ex) AAPL, 10, $100, time
         # TODO: Add a getprice wrapper to make sure you can't see into the future
-        if self.market.getPrice(ticker, self.time) is None:
+        if self.getPrice(ticker, self.time) is None:
             return
 
         if ticker in self.stocksOwned:
-            self.stocksOwned[ticker] += quantity
+            if self.stocksOwned[ticker] + quantity < 0:
+                raise ValueError("You are trying to sell stonks you don't have")
+            else:
+                self.stocksOwned[ticker] += quantity
         else:
             self.stocksOwned[ticker] = quantity
         #TODO: UPDATE netvalue
 
         # print("Bought at price: ", self.market.getPrice(ticker, self.time))
-        self.money -= quantity * self.market.getPrice(ticker, self.time)
-    
-    def sell(self, ticker, quantity):
+        deltaMoney = -quantity * self.getPrice(ticker, self.time)
+        if self.money + deltaMoney < 0:
+            raise ValueError("You are trying to use money you don't have")
+        else:
+            self.money -= quantity * self.getPrice(ticker, self.time)
+
+    def getPrice(self, ticker, time):
         """
-            Function to get that good profit.  If the price at this time is unknown we return without editing the state.
+            Wrapper function for getting price in a way that we have access to the current time.
 
             Args:
-                ticker (string): the stonk you want
-                quantity (int): number of stonks
+                ticker (string): the stonk we want
+                time (datetime.datetime): at what time
             
             Returns:
-                None
+                (np.float) price if available or (None) if not
         """
-        if self.market.getPrice(ticker, self.time) is None:
-            return
-        self.stocksOwned[ticker] -= quantity
-        self.money += quantity * self.market.getPrice(ticker, self.time)
+        if time > self.time:
+            raise ValueError("Trying to access time beyond current time")
+        elif time.date == datetime.now().day:
+            return self.market.getAPIPrice(ticker, time)
+        else:
+            return self.market.getCSVPrice(ticker, time)
     
     def updateTime(self, timestep):
         """
@@ -107,8 +116,8 @@ class TradingSession:
         """   
         base = self.money
         for key, value in self.stocksOwned.items():
-            if self.market.getPrice(key, self.time) is None:
+            if self.getPrice(key, self.time) is None:
                 print("Value unknown right now")
                 return
-            base += self.market.getPrice(key, self.time)*value
+            base += self.getPrice(key, self.time)*value
         return base

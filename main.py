@@ -31,12 +31,16 @@ def decisionLoop(tradingSession):
     """
     # print("Currently have $", tradingSession.money, "in cash")
 
-    tradingSession.buy("LYFT", 1)
-    tradingSession.buy("MSFT", 1)
-    tradingSession.buy("DBX", 1)
-    tradingSession.buy("FB", 1)
-    # print("Net value at ", tradingSession.time, " is ", tradingSession.value())
-    # print("--------------------")
+    tradingSession.trade("LYFT", 2)
+    tradingSession.trade("MSFT", 2)
+    tradingSession.trade("DBX", 2)
+    tradingSession.trade("AMZN", 2)
+    tradingSession.trade("LYFT", -1)
+    tradingSession.trade("MSFT", -1)
+    tradingSession.trade("DBX", -1)
+    tradingSession.trade("AMZN", -1)
+    print("Net value at ", tradingSession.time, " is ", tradingSession.value())
+    print("--------------------")
 
 # %%
 def runDecisionLoop(start, end, timestep, decisionLoop):
@@ -52,7 +56,7 @@ def runDecisionLoop(start, end, timestep, decisionLoop):
             None
     """
     market = Market()
-    ts = TradingSession(None, 1000000, market, start)
+    ts = TradingSession(None, 100, market, start)
     print("starting with", ts.money)
     while ts.time < end:
         decisionLoop(ts)
@@ -60,7 +64,7 @@ def runDecisionLoop(start, end, timestep, decisionLoop):
     ts.end()
 
 start = datetime.strptime("2020-02-24 9:30", "%Y-%m-%d %H:%M")
-end = datetime.strptime("2020-02-26 20:30", "%Y-%m-%d %H:%M")
+end = datetime.strptime("2020-02-26 15:59", "%Y-%m-%d %H:%M")
 # end = start + timedelta(days = 3)
 
 runDecisionLoop(start, end, timedelta(minutes = 1), decisionLoop)
