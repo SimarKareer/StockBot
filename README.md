@@ -1,5 +1,4 @@
-# StonkBot
-Ez stonks aquire currency
+# StockBot
 
 ## Setup
 First make an account on https://iexcloud.io
