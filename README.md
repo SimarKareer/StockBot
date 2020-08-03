@@ -11,3 +11,6 @@ Then make an empty config.json in the base folder AND in the IEX_historical-pric
 ```
 
 Then go run ``IEX_historical-prices/script/download_IEX.py``.  Go into the generated output folder and unzip any folders with data you want to use.  Then you can go run main.py.
+
+## Examples
+This framework allows you to put in commands to buy/sell various stocks after giving a start date.  At each timestep we ensure that the framework can only access stock data up to that point in time.  The total profit/losses are tracked throughout.
